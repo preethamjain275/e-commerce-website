@@ -1,106 +1,128 @@
 import { Link } from "react-router-dom";
-import { Heart, ShoppingCart, Star } from "lucide-react";
+import { Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Product } from "@/data/products";
 import { useCart } from "@/hooks/useCart";
-import { cn } from "@/lib/utils";
 
 interface ProductCardProps {
   product: Product;
-  className?: string;
+  compact?: boolean;
 }
 
-export function ProductCard({ product, className }: ProductCardProps) {
+export function ProductCard({ product, compact = false }: ProductCardProps) {
   const { addToCart } = useCart();
   const discountedPrice = product.discount
     ? product.price * (1 - product.discount / 100)
     : product.price;
 
+  const renderStars = (rating: number) => {
+    return (
+      <div className="flex items-center gap-1">
+        {[...Array(5)].map((_, i) => (
+          <Star
+            key={i}
+            className={`h-3.5 w-3.5 ${
+              i < Math.floor(rating)
+                ? "fill-amazon-orange text-amazon-orange"
+                : "text-gray-300"
+            }`}
+          />
+        ))}
+        <span className="text-amazon-blue text-xs ml-1">{product.reviews.toLocaleString()}</span>
+      </div>
+    );
+  };
+
+  if (compact) {
+    return (
+      <Link
+        to={`/product/${product.id}`}
+        className="group bg-white p-3 rounded-sm hover:shadow-card-hover transition-shadow"
+      >
+        <div className="aspect-square mb-2 overflow-hidden">
+          <img
+            src={product.image}
+            alt={product.name}
+            className="w-full h-full object-contain group-hover:scale-105 transition-transform"
+          />
+        </div>
+        <p className="text-xs text-amazon-dark line-clamp-2 hover:text-amazon-orange">
+          {product.name}
+        </p>
+        <div className="mt-1">
+          {renderStars(product.rating)}
+        </div>
+        <p className="text-sm font-medium mt-1">
+          <span className="text-xs align-top">$</span>
+          <span className="text-lg">{Math.floor(discountedPrice)}</span>
+          <span className="text-xs">{((discountedPrice % 1) * 100).toFixed(0).padStart(2, '0')}</span>
+        </p>
+      </Link>
+    );
+  }
+
   return (
-    <div
-      className={cn(
-        "group relative bg-card rounded-2xl overflow-hidden shadow-soft hover:shadow-card transition-smooth",
-        className
-      )}
-    >
+    <div className="group bg-white p-4 rounded-sm shadow-card hover:shadow-card-hover transition-shadow">
       {/* Image */}
-      <Link to={`/product/${product.id}`} className="block relative aspect-square overflow-hidden">
+      <Link to={`/product/${product.id}`} className="block aspect-square mb-3 overflow-hidden">
         <img
           src={product.image}
           alt={product.name}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+          className="w-full h-full object-contain group-hover:scale-105 transition-transform"
         />
-        
-        {/* Discount Badge */}
-        {product.discount && (
-          <Badge className="absolute top-3 left-3 bg-accent text-accent-foreground font-semibold">
-            -{product.discount}%
-          </Badge>
-        )}
-
-        {/* Quick Actions */}
-        <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-smooth">
-          <Button
-            variant="icon"
-            size="icon"
-            className="bg-card/90 backdrop-blur-sm shadow-soft hover:bg-card"
-          >
-            <Heart className="h-4 w-4" />
-          </Button>
-        </div>
-
-        {/* Add to Cart Overlay */}
-        <div className="absolute inset-x-0 bottom-0 p-4 translate-y-full group-hover:translate-y-0 transition-smooth">
-          <Button
-            variant="accent"
-            className="w-full"
-            onClick={(e) => {
-              e.preventDefault();
-              addToCart({
-                id: product.id,
-                name: product.name,
-                price: product.price,
-                image: product.image,
-                discount: product.discount,
-              });
-            }}
-          >
-            <ShoppingCart className="h-4 w-4 mr-2" />
-            Add to Cart
-          </Button>
-        </div>
       </Link>
 
-      {/* Info */}
-      <div className="p-4 space-y-2">
-        <p className="text-xs text-muted-foreground uppercase tracking-wider">
-          {product.category}
-        </p>
+      {/* Content */}
+      <div className="space-y-1">
         <Link to={`/product/${product.id}`}>
-          <h3 className="font-semibold text-foreground hover:text-accent transition-smooth line-clamp-1">
+          <h3 className="text-sm text-amazon-dark line-clamp-2 hover:text-amazon-orange">
             {product.name}
           </h3>
         </Link>
-        
+
         {/* Rating */}
-        <div className="flex items-center gap-1">
-          <Star className="h-4 w-4 fill-accent text-accent" />
-          <span className="text-sm font-medium">{product.rating}</span>
-          <span className="text-sm text-muted-foreground">({product.reviews})</span>
-        </div>
+        {renderStars(product.rating)}
 
         {/* Price */}
-        <div className="flex items-center gap-2">
-          <span className="text-lg font-bold text-foreground">
-            ${discountedPrice.toFixed(2)}
+        <div className="flex items-baseline gap-2">
+          <span className="text-xl font-medium">
+            <span className="text-xs align-top">$</span>
+            {Math.floor(discountedPrice)}
+            <span className="text-xs">{((discountedPrice % 1) * 100).toFixed(0).padStart(2, '0')}</span>
           </span>
           {product.discount && (
-            <span className="text-sm text-muted-foreground line-through">
-              ${product.price.toFixed(2)}
-            </span>
+            <>
+              <span className="text-xs text-muted-foreground line-through">
+                ${product.price.toFixed(2)}
+              </span>
+              <span className="text-xs text-amazon-deal font-medium">
+                ({product.discount}% off)
+              </span>
+            </>
           )}
         </div>
+
+        {/* Prime */}
+        <div className="flex items-center gap-1">
+          <span className="text-amazon-blue text-xs font-bold italic">prime</span>
+          <span className="text-xs text-muted-foreground">FREE Delivery</span>
+        </div>
+
+        {/* Add to Cart */}
+        <Button
+          variant="cart"
+          size="sm"
+          className="w-full mt-2"
+          onClick={() => addToCart({
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            image: product.image,
+            discount: product.discount,
+          })}
+        >
+          Add to Cart
+        </Button>
       </div>
     </div>
   );
