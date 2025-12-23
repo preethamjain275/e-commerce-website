@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Mail, Phone, MapPin, Send } from "lucide-react";
+import { Mail, Phone, MapPin, MessageSquare, HelpCircle, Package } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
@@ -8,11 +8,18 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 
+const helpTopics = [
+  { icon: Package, title: "Track your order", description: "Check the status of your order" },
+  { icon: HelpCircle, title: "Returns & Refunds", description: "Return items and get refunds" },
+  { icon: MessageSquare, title: "Product inquiry", description: "Ask about products" },
+];
+
 const Contact = () => {
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     name: "",
     email: "",
+    orderNumber: "",
     subject: "",
     message: "",
   });
@@ -21,94 +28,94 @@ const Contact = () => {
     e.preventDefault();
     setLoading(true);
 
-    // Simulate form submission
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    toast.success("Message sent successfully! We'll get back to you soon.");
-    setForm({ name: "", email: "", subject: "", message: "" });
+    toast.success("Message sent successfully! We'll respond within 24 hours.");
+    setForm({ name: "", email: "", orderNumber: "", subject: "", message: "" });
     setLoading(false);
   };
 
-  const contactInfo = [
-    {
-      icon: Mail,
-      title: "Email",
-      value: "support@luxe.com",
-      href: "mailto:support@luxe.com",
-    },
-    {
-      icon: Phone,
-      title: "Phone",
-      value: "+1 (555) 123-4567",
-      href: "tel:+15551234567",
-    },
-    {
-      icon: MapPin,
-      title: "Address",
-      value: "123 Luxury Ave, New York, NY 10001",
-      href: "#",
-    },
-  ];
-
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-background">
       <Header />
-      <main className="flex-1 py-20">
+      <main className="flex-1 py-8">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <p className="text-accent font-medium uppercase tracking-wider text-sm">
-              Get in Touch
-            </p>
-            <h1 className="text-4xl md:text-5xl font-bold mt-2">Contact Us</h1>
-            <p className="text-muted-foreground mt-4 max-w-xl mx-auto">
-              Have questions? We'd love to hear from you. Send us a message
-              and we'll respond as soon as possible.
-            </p>
+          <h1 className="text-3xl font-bold text-amazon-dark mb-2">Contact Us</h1>
+          <p className="text-muted-foreground mb-8">We're here to help 24/7</p>
+
+          {/* Quick Help */}
+          <div className="grid md:grid-cols-3 gap-4 mb-8">
+            {helpTopics.map((topic) => (
+              <div
+                key={topic.title}
+                className="bg-white p-4 rounded-lg border border-border hover:border-amazon-orange cursor-pointer transition-colors"
+              >
+                <topic.icon className="h-8 w-8 text-amazon-orange mb-2" />
+                <h3 className="font-bold text-amazon-dark">{topic.title}</h3>
+                <p className="text-sm text-muted-foreground">{topic.description}</p>
+              </div>
+            ))}
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-12">
+          <div className="grid lg:grid-cols-3 gap-8">
             {/* Contact Info */}
-            <div className="space-y-6">
-              {contactInfo.map((item) => (
-                <a
-                  key={item.title}
-                  href={item.href}
-                  className="flex items-start gap-4 p-6 bg-card rounded-2xl shadow-soft hover:shadow-card transition-smooth"
-                >
-                  <div className="p-3 rounded-xl bg-accent/10 text-accent">
-                    <item.icon className="h-6 w-6" />
+            <div className="space-y-4">
+              <div className="bg-white p-4 rounded-lg border border-border">
+                <h3 className="font-bold text-amazon-dark mb-4">Get in Touch</h3>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <Mail className="h-5 w-5 text-amazon-orange" />
+                    <div>
+                      <p className="text-sm font-medium">Email</p>
+                      <p className="text-sm text-amazon-blue">support@shopkart.com</p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="font-semibold text-foreground">{item.title}</h3>
-                    <p className="text-muted-foreground">{item.value}</p>
+                  <div className="flex items-center gap-3">
+                    <Phone className="h-5 w-5 text-amazon-orange" />
+                    <div>
+                      <p className="text-sm font-medium">Phone</p>
+                      <p className="text-sm text-amazon-blue">1-800-123-4567</p>
+                    </div>
                   </div>
-                </a>
-              ))}
+                  <div className="flex items-center gap-3">
+                    <MapPin className="h-5 w-5 text-amazon-orange" />
+                    <div>
+                      <p className="text-sm font-medium">Address</p>
+                      <p className="text-sm text-muted-foreground">123 Commerce St, Seattle, WA</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-amazon-yellow/10 p-4 rounded-lg border border-amazon-yellow">
+                <h3 className="font-bold text-amazon-dark mb-2">Customer Service Hours</h3>
+                <p className="text-sm text-muted-foreground">
+                  Available 24 hours a day, 7 days a week
+                </p>
+              </div>
             </div>
 
             {/* Contact Form */}
             <div className="lg:col-span-2">
               <form
                 onSubmit={handleSubmit}
-                className="bg-card p-8 rounded-2xl shadow-soft space-y-6"
+                className="bg-white p-6 rounded-lg border border-border space-y-4"
               >
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="name">Name</Label>
+                <h3 className="font-bold text-lg text-amazon-dark">Send us a message</h3>
+                
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <Label className="text-sm font-bold">Your Name</Label>
                     <Input
-                      id="name"
-                      placeholder="Your name"
                       value={form.name}
                       onChange={(e) => setForm({ ...form, name: e.target.value })}
                       required
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
+                  <div className="space-y-1">
+                    <Label className="text-sm font-bold">Email Address</Label>
                     <Input
-                      id="email"
                       type="email"
-                      placeholder="you@example.com"
                       value={form.email}
                       onChange={(e) => setForm({ ...form, email: e.target.value })}
                       required
@@ -116,38 +123,42 @@ const Contact = () => {
                   </div>
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="subject">Subject</Label>
-                  <Input
-                    id="subject"
-                    placeholder="How can we help?"
-                    value={form.subject}
-                    onChange={(e) => setForm({ ...form, subject: e.target.value })}
-                    required
-                  />
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <Label className="text-sm font-bold">Order Number (optional)</Label>
+                    <Input
+                      value={form.orderNumber}
+                      onChange={(e) => setForm({ ...form, orderNumber: e.target.value })}
+                      placeholder="e.g., 123-4567890"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-sm font-bold">Subject</Label>
+                    <Input
+                      value={form.subject}
+                      onChange={(e) => setForm({ ...form, subject: e.target.value })}
+                      required
+                    />
+                  </div>
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="message">Message</Label>
+                <div className="space-y-1">
+                  <Label className="text-sm font-bold">Message</Label>
                   <Textarea
-                    id="message"
-                    placeholder="Your message..."
-                    rows={6}
+                    rows={5}
                     value={form.message}
                     onChange={(e) => setForm({ ...form, message: e.target.value })}
+                    placeholder="How can we help you?"
                     required
                   />
                 </div>
 
                 <Button
                   type="submit"
-                  variant="hero"
-                  size="lg"
+                  variant="cart"
                   disabled={loading}
-                  className="w-full md:w-auto"
                 >
                   {loading ? "Sending..." : "Send Message"}
-                  <Send className="ml-2 h-4 w-4" />
                 </Button>
               </form>
             </div>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { Eye, EyeOff, Mail, Lock, User, ArrowLeft } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -80,138 +80,149 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen flex">
-      {/* Left - Form */}
-      <div className="flex-1 flex items-center justify-center p-8">
-        <div className="w-full max-w-md space-y-8">
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-smooth"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back to Home
+    <div className="min-h-screen bg-white flex flex-col">
+      {/* Header */}
+      <div className="py-4 border-b border-border">
+        <div className="container mx-auto px-4">
+          <Link to="/" className="inline-block">
+            <span className="text-2xl font-bold text-amazon-dark">shop</span>
+            <span className="text-2xl font-bold text-amazon-orange">Kart</span>
+            <span className="text-sm text-muted-foreground">.in</span>
           </Link>
-
-          <div className="space-y-2">
-            <h1 className="text-3xl font-bold text-foreground">
-              {isLogin ? "Welcome back" : "Create account"}
-            </h1>
-            <p className="text-muted-foreground">
-              {isLogin
-                ? "Enter your credentials to access your account"
-                : "Sign up to start shopping with us"}
-            </p>
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {!isLogin && (
-              <div className="space-y-2">
-                <Label htmlFor="name">Full Name</Label>
-                <div className="relative">
-                  <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                  <Input
-                    id="name"
-                    type="text"
-                    placeholder="John Doe"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="pl-10"
-                  />
-                </div>
-              </div>
-            )}
-
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="you@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="pl-10"
-                />
-              </div>
-              {errors.email && (
-                <p className="text-sm text-destructive">{errors.email}</p>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                <Input
-                  id="password"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="pl-10 pr-10"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                >
-                  {showPassword ? (
-                    <EyeOff className="h-5 w-5" />
-                  ) : (
-                    <Eye className="h-5 w-5" />
-                  )}
-                </button>
-              </div>
-              {errors.password && (
-                <p className="text-sm text-destructive">{errors.password}</p>
-              )}
-            </div>
-
-            <Button
-              type="submit"
-              variant="hero"
-              className="w-full"
-              disabled={loading}
-            >
-              {loading ? "Loading..." : isLogin ? "Sign In" : "Create Account"}
-            </Button>
-          </form>
-
-          <div className="text-center">
-            <button
-              type="button"
-              onClick={() => {
-                setIsLogin(!isLogin);
-                setErrors({});
-              }}
-              className="text-sm text-accent hover:underline"
-            >
-              {isLogin
-                ? "Don't have an account? Sign up"
-                : "Already have an account? Sign in"}
-            </button>
-          </div>
         </div>
       </div>
 
-      {/* Right - Image */}
-      <div className="hidden lg:block flex-1 relative">
-        <img
-          src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1200&q=80"
-          alt="Shopping"
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-background/80 to-transparent" />
-        <div className="absolute inset-0 flex items-center p-12">
-          <div className="max-w-md">
-            <h2 className="text-4xl font-bold text-foreground mb-4">
-              Start your shopping journey
-            </h2>
-            <p className="text-muted-foreground text-lg">
-              Discover premium products curated for the modern lifestyle.
-            </p>
+      {/* Form */}
+      <div className="flex-1 flex items-center justify-center py-8">
+        <div className="w-full max-w-sm">
+          <div className="border border-border rounded-lg p-6">
+            <h1 className="text-2xl font-medium text-amazon-dark mb-4">
+              {isLogin ? "Sign in" : "Create account"}
+            </h1>
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {!isLogin && (
+                <div className="space-y-1">
+                  <Label htmlFor="name" className="text-sm font-bold">Your name</Label>
+                  <Input
+                    id="name"
+                    type="text"
+                    placeholder="First and last name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="h-9"
+                  />
+                </div>
+              )}
+
+              <div className="space-y-1">
+                <Label htmlFor="email" className="text-sm font-bold">
+                  {isLogin ? "Email or mobile phone number" : "Email"}
+                </Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="h-9"
+                />
+                {errors.email && (
+                  <p className="text-xs text-amazon-deal">{errors.email}</p>
+                )}
+              </div>
+
+              <div className="space-y-1">
+                <Label htmlFor="password" className="text-sm font-bold">Password</Label>
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder={isLogin ? "" : "At least 6 characters"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="h-9 pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                  </button>
+                </div>
+                {errors.password && (
+                  <p className="text-xs text-amazon-deal">{errors.password}</p>
+                )}
+                {!isLogin && (
+                  <p className="text-xs text-muted-foreground flex items-center gap-1">
+                    <span className="text-amazon-blue">ℹ</span>
+                    Passwords must be at least 6 characters.
+                  </p>
+                )}
+              </div>
+
+              <Button
+                type="submit"
+                variant="cart"
+                className="w-full rounded-lg"
+                disabled={loading}
+              >
+                {loading ? "Please wait..." : isLogin ? "Sign in" : "Create your ShopKart account"}
+              </Button>
+            </form>
+
+            {isLogin && (
+              <p className="text-xs text-muted-foreground mt-4">
+                By continuing, you agree to ShopKart's{" "}
+                <a href="#" className="text-amazon-blue hover:text-amazon-orange hover:underline">
+                  Conditions of Use
+                </a>{" "}
+                and{" "}
+                <a href="#" className="text-amazon-blue hover:text-amazon-orange hover:underline">
+                  Privacy Notice
+                </a>.
+              </p>
+            )}
           </div>
+
+          <div className="relative my-6">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-border"></div>
+            </div>
+            <div className="relative flex justify-center text-xs">
+              <span className="bg-white px-4 text-muted-foreground">
+                {isLogin ? "New to ShopKart?" : "Already have an account?"}
+              </span>
+            </div>
+          </div>
+
+          <button
+            onClick={() => {
+              setIsLogin(!isLogin);
+              setErrors({});
+            }}
+            className="w-full border border-border rounded-lg py-2 text-sm hover:bg-secondary transition-colors"
+          >
+            {isLogin ? "Create your ShopKart account" : "Sign in"}
+          </button>
+        </div>
+      </div>
+
+      {/* Footer */}
+      <div className="border-t border-border py-6 bg-gradient-to-b from-transparent to-secondary/50">
+        <div className="container mx-auto px-4 text-center">
+          <div className="flex justify-center gap-6 text-xs text-amazon-blue mb-2">
+            <a href="#" className="hover:text-amazon-orange hover:underline">Conditions of Use</a>
+            <a href="#" className="hover:text-amazon-orange hover:underline">Privacy Notice</a>
+            <a href="#" className="hover:text-amazon-orange hover:underline">Help</a>
+          </div>
+          <p className="text-xs text-muted-foreground">
+            © 2024 ShopKart. All rights reserved.
+          </p>
         </div>
       </div>
     </div>
